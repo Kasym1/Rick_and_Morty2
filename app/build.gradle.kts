@@ -81,7 +81,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    //nav
+//nav
     implementation(libs.androidx.navigation.compose)
 
 //json
@@ -112,4 +112,7 @@ dependencies {
 //room
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+
+ //paging3
+    implementation (libs.androidx.paging.compose)
 }

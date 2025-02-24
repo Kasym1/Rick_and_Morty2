@@ -3,13 +3,14 @@ package kg.geeks.rick_and_morty.data.db.daos
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kg.geeks.rick_and_morty.model.CharacterModel
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FavoriteCharacterDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addFavoriteCharacter(character: CharacterModel)
 
     @Delete

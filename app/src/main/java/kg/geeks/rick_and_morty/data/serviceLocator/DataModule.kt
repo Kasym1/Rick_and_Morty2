@@ -1,4 +1,4 @@
-package kg.geeks.rick_and_morty.data.db.serviceLocator
+package kg.geeks.rick_and_morty.data.serviceLocator
 
 import androidx.room.Room
 import kg.geeks.rick_and_morty.BuildConfig

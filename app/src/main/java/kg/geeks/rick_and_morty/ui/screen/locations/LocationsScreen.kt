@@ -11,18 +11,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
+import kg.geeks.rick_and_morty.data.paging.ErrorItem
+import kg.geeks.rick_and_morty.data.paging.LoadingItem
 import kg.geeks.rick_and_morty.model.LocationModel
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -32,21 +33,27 @@ fun LocationsScreen(
     paddingValues: PaddingValues,
     locationsViewModel: LocationsViewModel = koinViewModel()
 ) {
-    val locations = locationsViewModel.locations.collectAsState()
+    val locations = locationsViewModel.locations.collectAsLazyPagingItems()
 
-    LaunchedEffect(Unit) {
-        locationsViewModel.fetchAllLocations()
-    }
     LazyColumn(
         modifier = Modifier
             .padding(paddingValues)
             .padding(horizontal = 16.dp),
         contentPadding = PaddingValues(top = 10.dp)
     ) {
-        items(locations.value) { location ->
-            LocationItem(
-                location = location,
-                onItemClick = { onNavigateToDetail(location.id) })
+        items(locations.itemCount) { index ->
+            val location = locations[index]
+            location?.let {
+                LocationItem(
+                    location = it,
+                    onItemClick = { onNavigateToDetail(it.id) }
+                )
+            }
+        }
+        when (val state = locations.loadState.append) {
+            is LoadState.Loading -> item { LoadingItem() }
+            is LoadState.Error -> item { ErrorItem(state.error) { locations.retry() } }
+            else -> {}
         }
     }
 }

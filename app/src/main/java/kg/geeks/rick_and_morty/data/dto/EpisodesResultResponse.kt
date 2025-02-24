@@ -1,8 +1,11 @@
 package kg.geeks.rick_and_morty.data.dto
 
 import com.google.gson.annotations.SerializedName
+import kg.geeks.rick_and_morty.data.paging.PagingInfo
 
 data class EpisodesResultResponse(
+    @SerializedName("info")
+    val pagingInfo: PagingInfo,
     @SerializedName("results")
     val episodesResponse: List<EpisodeResponse>
 )
